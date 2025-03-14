@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Ultimate Twitter Tool",
     "version": "1.0",
-    "description": "Advanced Twitter/X profile analytics and interaction management. Track verified followers, automate interactions, and gain valuable insights.",
+    "description": "Advanced Twitter analytics and interaction tool. Track verified followers, automate interactions, and gain valuable insights.",
     "permissions": ["activeTab", "scripting", "storage", "tabs"],
     "host_permissions": ["https://x.com/*", "https://twitter.com/*", "https://cdn.jsdelivr.net/*"],
     "action": {
