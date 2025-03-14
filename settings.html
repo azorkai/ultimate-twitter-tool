@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Stats Analyzer - Settings</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #1DA1F2;
+            --sidebar-width: 280px;
+            --content-padding: 30px;
+            --section-spacing: 25px;
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --header-height: 70px;
+            --light-bg: #f7f9fa;
+            --light-text: #14171a;
+            --light-text-secondary: #657786;
+            --light-border: #e1e8ed;
+            --light-card-bg: #ffffff;
+            --dark-bg: #15202b;
+            --dark-secondary-bg: #1e2732;
+            --dark-text: #ffffff;
+            --dark-text-secondary: #8899a6;
+            --dark-border: #38444d;
+            --dark-card-bg: #192734;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--light-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Modern Layout */
+        .settings-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .settings-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--light-card-bg);
+            border-right: 1px solid var(--light-border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: var(--box-shadow);
+            z-index: 10;
+            transition: transform var(--transition-speed);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 25px 20px;
+            border-bottom: 1px solid var(--light-border);
+        }
+        
+        .app-logo {
+            margin-right: 15px;
+        }
+        
+        .app-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--light-text);
+        }
+        
+        .app-version {
+            font-size: 12px;
+            color: var(--light-text-secondary);
+            margin: 0;
+        }
+        
+        .sidebar-nav {
+            padding: 15px 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            color: var(--light-text);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(29, 161, 242, 0.1);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(29, 161, 242, 0.15);
+            border-left: 3px solid var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .nav-icon {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--light-border);
+            text-align: center;
+        }
+        
+        .support-button {
+            display: block;
+            margin: 10px auto;
+        }
+        
+        .support-button img {
+            max-width: 180px;
+            transition: transform 0.2s;
+        }
+        
+        .support-button img:hover {
+            transform: scale(1.05);
+        }
+        
+        .developer-info {
+            font-size: 12px;
+            color: var(--light-text-secondary);
+            margin-top: 10px;
+        }
+        
+        .developer-info a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .developer-info a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Main Content Styles */
+        .settings-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: var(--content-padding);
+        }
+        
+        .content-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-border);
+        }
+        
+        .content-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 5px;
+            color: var(--light-text);
+        }
+        
+        .content-subtitle {
+            font-size: 16px;
+            color: var(--light-text-secondary);
+            margin: 0;
+        }
+        
+        /* Settings sections styling */
+        .settings-section {
+            display: none; /* Default hidden */
+            margin-bottom: var(--section-spacing);
+            padding: 25px;
+            background-color: var(--light-card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .settings-section.active {
+            display: block;
+        }
+        
+        .settings-section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-border);
+        }
+        
+        .settings-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(29, 161, 242, 0.1);
+            border-radius: 50%;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .settings-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            color: var(--light-text);
+        }
+        
+        .settings-info {
+            font-size: 14px;
+            color: var(--light-text-secondary);
+            margin: 0 0 25px 0;
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: background-color var(--transition-speed);
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .settings-option:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+        
+        .settings-input-container {
+            display: flex;
+            margin: 20px 0;
+            width: 100%;
+            align-items: center;
+        }
+        
+        .settings-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--light-border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all var(--transition-speed);
+            background-color: var(--light-card-bg);
+            color: var(--light-text);
+        }
+        
+        .settings-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.2);
+        }
+        
+        .settings-save-btn {
+            padding: 12px 20px;
+            margin-left: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            min-width: 80px;
+        }
+        
+        .settings-save-btn:hover {
+            background-color: #0c7abf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(29, 161, 242, 0.2);
+        }
+        
+        .settings-status {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 20px;
+            padding: 0 5px;
+        }
+        
+        .settings-status.success {
+            color: #17bf63;
+        }
+        
+        .settings-status.error {
+            color: #e0245e;
+        }
+        
+        .toggle-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 26px;
+        }
+        
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccd6dd;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .settings-select {
+            padding: 10px 15px;
+            border: 1px solid var(--light-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: var(--light-card-bg);
+            color: var(--light-text);
+            width: 200px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23657786' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+            transition: all var(--transition-speed);
+        }
+        
+        .settings-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.1);
+        }
+        
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 15px;
+            border: 2px solid var(--light-border);
+            transition: all var(--transition-speed);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .color-preview:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .settings-danger-btn {
+            padding: 12px 20px;
+            background-color: #e0245e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .settings-danger-btn:hover {
+            background-color: #c0143e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(224, 36, 94, 0.2);
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            text-decoration: none;
+            margin-top: 30px;
+            box-shadow: 0 2px 8px rgba(29, 161, 242, 0.3);
+        }
+        
+        .back-button svg {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .back-button:hover {
+            background-color: #0c7abf;
+            box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-toggle svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .settings-sidebar {
+            background-color: var(--dark-secondary-bg);
+            border-right-color: var(--dark-border);
+        }
+        
+        body.dark-mode .sidebar-header {
+            border-bottom-color: var(--dark-border);
+        }
+        
+        body.dark-mode .app-title {
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .app-version {
+            color: var(--dark-text-secondary);
+        }
+        
+        body.dark-mode .nav-item {
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .nav-item:hover {
+            background-color: rgba(29, 161, 242, 0.15);
+        }
+        
+        body.dark-mode .sidebar-footer {
+            border-top-color: var(--dark-border);
+        }
+        
+        body.dark-mode .developer-info {
+            color: var(--dark-text-secondary);
+        }
+        
+        body.dark-mode .content-header {
+            border-bottom-color: var(--dark-border);
+        }
+        
+        body.dark-mode .content-title {
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .content-subtitle {
+            color: var(--dark-text-secondary);
+        }
+        
+        body.dark-mode .settings-section {
+            background-color: var(--dark-card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        body.dark-mode .settings-section h3 {
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .settings-info {
+            color: var(--dark-text-secondary);
+        }
+        
+        body.dark-mode .settings-option:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        body.dark-mode .settings-input {
+            background-color: var(--dark-secondary-bg);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .settings-select {
+            background-color: var(--dark-secondary-bg);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238899a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+        
+        body.dark-mode .toggle-label {
+            color: var(--dark-text);
+        }
+        
+        body.dark-mode .color-preview {
+            border-color: var(--dark-border);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 240px;
+                --content-padding: 20px;
+            }
+            
+            .settings-section {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .settings-layout {
+                flex-direction: column;
+            }
+            
+            .settings-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--light-border);
+                box-shadow: none;
+                display: none;
+            }
+            
+            .settings-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .mobile-menu-visible .settings-sidebar {
+                display: block;
+            }
+            
+            .content-title {
+                font-size: 24px;
+                margin-top: 50px;
+            }
+            
+            .settings-option {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .toggle-switch {
+                margin-top: 10px;
+            }
+            
+            .settings-input-container {
+                flex-direction: column;
+            }
+            
+            .settings-save-btn {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .color-picker-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .settings-select {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .color-preview {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+            
+            body.dark-mode .settings-sidebar {
+                border-bottom-color: var(--dark-border);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-layout">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path>
+            </svg>
+        </button>
+
+        <!-- Sidebar -->
+        <aside class="settings-sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo">
+                    <img src="icon.png" alt="Twitter Stats Analyzer">
+                </div>
+                <div>
+                    <h1 class="app-title">Twitter Stats</h1>
+                    <p class="app-version">v1.2.0</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#user-preferences" class="nav-item active" data-section="user-preferences">
+                    <div class="nav-icon">👤</div>
+                    <span>User Preferences</span>
+                </a>
+                <a href="#appearance" class="nav-item" data-section="appearance">
+                    <div class="nav-icon">🎨</div>
+                    <span>Appearance</span>
+                </a>
+                <a href="#display" class="nav-item" data-section="display">
+                    <div class="nav-icon">📱</div>
+                    <span>Display Options</span>
+                </a>
+                <a href="#notifications" class="nav-item" data-section="notifications">
+                    <div class="nav-icon">🔔</div>
+                    <span>Notifications</span>
+                </a>
+                <a href="#privacy" class="nav-item" data-section="privacy">
+                    <div class="nav-icon">🔒</div>
+                    <span>Privacy</span>
+                </a>
+                <a href="#ai" class="nav-item" data-section="ai">
+                    <div class="nav-icon">🤖</div>
+                    <span>AI Settings</span>
+                </a>
+                <a href="#developer" class="nav-item" data-section="developer">
+                    <div class="nav-icon">⚙️</div>
+                    <span>Developer Options</span>
+                </a>
+                <a href="#about" class="nav-item" data-section="about">
+                    <div class="nav-icon">ℹ️</div>
+                    <span>About</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="support-button">
+                    <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
+                        <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=azorkai&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee" />
+                    </a>
+                </div>
+                <div class="developer-info">
+                    Developed by <a href="https://github.com/azorkai" target="_blank">azorkai</a>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="settings-content">
+            <div class="content-header">
+                <h1 class="content-title">Settings</h1>
+                <p class="content-subtitle">Customize your Twitter Stats Analyzer experience</p>
+            </div>
+            
+            <!-- User Preferences Section -->
+            <section class="settings-section active" id="user-preferences">
+                <div class="settings-section-header">
+                    <div class="settings-icon">👤</div>
+                    <h3>User Preferences</h3>
+                </div>
+                <p class="settings-info">Configure the default profile to analyze when you open the extension</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-grid-full">
+                        <div class="settings-option">
+                            <label for="defaultUsername" class="toggle-label">Default Twitter Username</label>
+                            <div class="settings-input-container" style="margin: 0;">
+                                <input type="text" id="defaultUsername" placeholder="Enter Twitter username (without @)" class="settings-input">
+                                <button id="saveDefaultUsername" class="settings-save-btn">Save</button>
+                            </div>
+                        </div>
+                        <p id="defaultUsernameStatus" class="settings-status"></p>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="preferredLanguage" class="toggle-label">Preferred Language</label>
+                        <select id="preferredLanguage" class="settings-select">
+                            <option value="en">English</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="startupAction" class="toggle-label">Startup Action</label>
+                        <select id="startupAction" class="settings-select">
+                            <option value="last_profile">Load Last Viewed Profile</option>
+                            <option value="default_profile">Load Default Profile</option>
+                            <option value="ask">Ask Each Time</option>
+                            <option value="blank">Start with Blank Page</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="autoRefreshToggle" class="toggle-label">Auto Refresh Data</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="autoRefreshToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="autoSaveToggle" class="toggle-label">Auto Save Results</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="autoSaveToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Appearance Section -->
+            <section class="settings-section" id="appearance">
+                <div class="settings-section-header">
+                    <div class="settings-icon">🎨</div>
+                    <h3>Appearance</h3>
+                </div>
+                <p class="settings-info">Customize the look and feel of the extension</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-option">
+                        <label for="darkModeToggle" class="toggle-label">Dark Mode</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="themeColorSelect" class="toggle-label">Accent Color</label>
+                        <div class="color-picker-container">
+                            <select id="themeColorSelect" class="settings-select">
+                                <option value="default">Twitter Blue</option>
+                                <option value="purple">Purple</option>
+                                <option value="green">Green</option>
+                                <option value="orange">Orange</option>
+                                <option value="pink">Pink</option>
+                            </select>
+                            <div class="color-preview" id="colorPreview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="borderRadiusSelect" class="toggle-label">Corner Roundness</label>
+                        <select id="borderRadiusSelect" class="settings-select">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                            <option value="pill">Pill Shaped</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="animationsToggle" class="toggle-label">Enable Animations</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="animationsToggle" class="toggle-input" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option">
+                            <label for="customCssToggle" class="toggle-label">Enable Custom CSS</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="customCssToggle" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full" id="customCssContainer" style="display: none;">
+                        <div class="settings-option settings-option-vertical">
+                            <label for="customCss" class="toggle-label">Custom CSS</label>
+                            <textarea id="customCss" class="settings-input" style="min-height: 120px; font-family: monospace;" placeholder="Enter your custom CSS here..."></textarea>
+                            <div class="settings-buttons" style="margin-top: 15px;">
+                                <button id="resetCustomCss" class="settings-danger-btn">Reset</button>
+                                <button id="saveCustomCss" class="settings-save-btn">Apply CSS</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Display Options Section -->
+            <section class="settings-section" id="display">
+                <div class="settings-section-header">
+                    <div class="settings-icon">📱</div>
+                    <h3>Display Options</h3>
+                </div>
+                <p class="settings-info">Customize how information is displayed in the extension</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-option">
+                        <label for="compactViewToggle" class="toggle-label">Compact View</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="compactViewToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="fontSizeSelect" class="toggle-label">Font Size</label>
+                        <select id="fontSizeSelect" class="settings-select">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="dateFormatSelect" class="toggle-label">Date Format</label>
+                        <select id="dateFormatSelect" class="settings-select">
+                            <option value="us">MM/DD/YYYY</option>
+                            <option value="eu">DD/MM/YYYY</option>
+                            <option value="iso">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="numberFormatSelect" class="toggle-label">Number Format</label>
+                        <select id="numberFormatSelect" class="settings-select">
+                            <option value="thousands">Use K/M (1K, 1M)</option>
+                            <option value="full">Full Numbers (1,000)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="defaultTabSelect" class="toggle-label">Default Tab</label>
+                        <select id="defaultTabSelect" class="settings-select">
+                            <option value="stats">Statistics</option>
+                            <option value="following">Following</option>
+                            <option value="followers">Followers</option>
+                            <option value="verified">Verified Followers</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="cardStyleSelect" class="toggle-label">Card Style</label>
+                        <select id="cardStyleSelect" class="settings-select">
+                            <option value="modern">Modern</option>
+                            <option value="classic">Classic</option>
+                            <option value="flat">Flat</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Notifications Section -->
+            <section class="settings-section" id="notifications">
+                <div class="settings-section-header">
+                    <div class="settings-icon">🔔</div>
+                    <h3>Notifications</h3>
+                </div>
+                <p class="settings-info">Configure notification preferences</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-option">
+                        <label for="notificationsToggle" class="toggle-label">Enable Notifications</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="notificationsToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="soundToggle" class="toggle-label">Notification Sound</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="notifDurationSelect" class="toggle-label">Notification Duration</label>
+                        <select id="notifDurationSelect" class="settings-select">
+                            <option value="3">3 seconds</option>
+                            <option value="5">5 seconds</option>
+                            <option value="7">7 seconds</option>
+                            <option value="10">10 seconds</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="notifTypeSelect" class="toggle-label">Notification Style</label>
+                        <select id="notifTypeSelect" class="settings-select">
+                            <option value="popup">Popup</option>
+                            <option value="browser">Browser Notification</option>
+                            <option value="both">Both</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option">
+                            <label class="toggle-label">What to notify about:</label>
+                            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyNewFollowers" checked>
+                                    <label for="notifyNewFollowers">New Followers</label>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyUnfollows" checked>
+                                    <label for="notifyUnfollows">Unfollows</label>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyVerified">
+                                    <label for="notifyVerified">Verified Followers</label>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyMentions">
+                                    <label for="notifyMentions">Mentions</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option settings-option-vertical">
+                            <label for="testNotification" class="toggle-label">Test Notifications</label>
+                            <button id="testNotification" class="settings-save-btn" style="width: auto;">Send Test Notification</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Privacy Section -->
+            <section class="settings-section" id="privacy">
+                <div class="settings-section-header">
+                    <div class="settings-icon">🔒</div>
+                    <h3>Privacy</h3>
+                </div>
+                <p class="settings-info">Manage your data and privacy preferences</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-option">
+                        <label for="saveHistoryToggle" class="toggle-label">Save Interaction History</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="saveHistoryToggle" class="toggle-input" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="anonymousDataToggle" class="toggle-label">Allow Anonymous Usage Data</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="anonymousDataToggle" class="toggle-input" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="autoBackupToggle" class="toggle-label">Auto Backup Data</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="autoBackupToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="syncDataToggle" class="toggle-label">Sync Data Across Devices</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="syncDataToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option settings-option-vertical">
+                            <label class="toggle-label">Data Actions</label>
+                            <div class="settings-buttons">
+                                <button id="exportDataBtn" class="settings-save-btn">Export All Data</button>
+                                <button id="importDataBtn" class="settings-save-btn">Import Data</button>
+                                <button id="clearDataBtn" class="settings-danger-btn">Clear All Data</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option">
+                            <label class="toggle-label">Privacy Policy</label>
+                            <button id="privacyPolicyBtn" class="settings-save-btn">View Privacy Policy</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- AI Settings Section -->
+            <section id="ai" class="settings-section">
+                <div class="settings-section-header">
+                    <div class="settings-icon">🤖</div>
+                    <h3>AI Settings</h3>
+                </div>
+                <p class="settings-info">Configure AI-related settings for enhanced Twitter analytics and features</p>
+                
+                <!-- AI Main Dashboard -->
+                <div class="ai-dashboard">
+                    <!-- AI Status Panel -->
+                    <div class="ai-panel">
+                        <div class="ai-panel-header">
+                            <h4>
+                                <svg viewBox="0 0 24 24" width="18" height="18">
+                                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                </svg>
+                                Service Status
+                            </h4>
+                            <span class="ai-status active">Active</span>
+                        </div>
+                        <div class="ai-panel-content">
+                            <div class="ai-stats">
+                                <div class="ai-stat-item">
+                                    <span class="ai-stat-label">Provider</span>
+                                    <span class="ai-stat-value" id="currentProvider">OpenAI</span>
+                                </div>
+                                <div class="ai-stat-item">
+                                    <span class="ai-stat-label">Model</span>
+                                    <span class="ai-stat-value" id="currentModel">GPT-4</span>
+                                </div>
+                                <div class="ai-stat-item">
+                                    <span class="ai-stat-label">Last Used</span>
+                                    <span class="ai-stat-value" id="lastUsed">Today at 10:45</span>
+                                </div>
+                            </div>
+                            <button id="testAiConnection" class="ai-action-btn">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor" d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+                                </svg>
+                                Test Connection
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- API Configuration Panel -->
+                    <div class="ai-panel">
+                        <div class="ai-panel-header">
+                            <h4>
+                                <svg viewBox="0 0 24 24" width="18" height="18">
+                                    <path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12,15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                                </svg>
+                                API Configuration
+                            </h4>
+                        </div>
+                        <div class="ai-panel-content">
+                            <div class="ai-form-row">
+                                <div class="ai-form-group">
+                                    <label for="aiProvider">AI Provider</label>
+                                    <select id="aiProvider" class="ai-select">
+                                        <option value="openai">OpenAI</option>
+                                        <option value="anthropic">Anthropic (Claude)</option>
+                                        <option value="google">Google (Gemini)</option>
+                                    </select>
+                                </div>
+                                <div class="ai-form-group">
+                                    <label for="aiModelSelect">AI Model</label>
+                                    <select id="aiModelSelect" class="ai-select">
+                                        <option value="gpt-4">GPT-4</option>
+                                        <option value="gpt-4o">GPT-4o</option>
+                                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="ai-form-row">
+                                <div class="ai-form-group full">
+                                    <label for="aiApiKey">API Key</label>
+                                    <div class="ai-input-wrapper">
+                                        <input type="password" id="aiApiKey" class="ai-input" placeholder="Enter your API key">
+                                        <button id="toggleApiKeyVisibility" class="ai-toggle-visibility">
+                                            <svg viewBox="0 0 24 24" width="18" height="18">
+                                                <path fill="currentColor" d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5Z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <p class="ai-form-hint">Your API key is stored locally and never sent to our servers</p>
+                                </div>
+                            </div>
+                            <div class="ai-form-footer">
+                                <div id="aiConnectionStatus" class="ai-status-message"></div>
+                                <button id="saveAiSettings" class="ai-action-btn primary">
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M17 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V7L17 3M19 19H5V5H16.17L19 7.83V19M12,12C10.34,12 9,13.34 9,15S10.34,18 12,18 15,16.66 15,15 13.66,12 12,12M6,6H15V10H6V6Z"/>
+                                    </svg>
+                                    Save Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Features Grid -->
+                <div class="ai-section">
+                    <div class="ai-section-header">
+                        <h4>
+                            <svg viewBox="0 0 24 24" width="18" height="18">
+                                <path fill="currentColor" d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z"/>
+                            </svg>
+                            AI Features
+                        </h4>
+                        <div class="ai-global-toggle">
+                            <span>Enable All</span>
+                            <label class="switch">
+                                <input type="checkbox" id="enableAllAI">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-features-grid">
+                        <!-- Feature 1 -->
+                        <div class="ai-feature-card">
+                            <div class="ai-feature-header">
+                                <div class="ai-feature-icon">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L6.04,7.5L12,10.85L17.96,7.5L12,4.15M5,15.91L11,19.29V12.58L5,9.21V15.91M19,15.91V9.21L13,12.58V19.29L19,15.91Z"/>
+                                    </svg>
+                                </div>
+                                <div class="ai-feature-title">Sentiment Analysis</div>
+                                <label class="switch small">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <p class="ai-feature-desc">Analyze the sentiment of tweets and responses to understand audience reactions.</p>
+                        </div>
+                        
+                        <!-- Feature 2 -->
+                        <div class="ai-feature-card">
+                            <div class="ai-feature-header">
+                                <div class="ai-feature-icon">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"/>
+                                    </svg>
+                                </div>
+                                <div class="ai-feature-title">Engagement Prediction</div>
+                                <label class="switch small">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <p class="ai-feature-desc">Predict engagement levels for your tweets to optimize reach and impact.</p>
+                        </div>
+                        
+                        <!-- Feature 3 -->
+                        <div class="ai-feature-card">
+                            <div class="ai-feature-header">
+                                <div class="ai-feature-icon">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M20,5A2,2 0 0,1 22,7V17A2,2 0 0,1 20,19H4C2.89,19 2,20.1 2,19V5A2,2 0 0,1 4,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M9,14V16H7V14H9M13,14V16H11V14H13M17,14V16H15V14H17Z"/>
+                                    </svg>
+                                </div>
+                                <div class="ai-feature-title">Content Suggestions</div>
+                                <label class="switch small">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <p class="ai-feature-desc">Get AI-powered suggestions for content and hashtags based on trending topics.</p>
+                        </div>
+                        
+                        <!-- Feature 4 -->
+                        <div class="ai-feature-card">
+                            <div class="ai-feature-header">
+                                <div class="ai-feature-icon">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M10,21H14A2,2 0 0,1 12,23A2,2 0 0,1 10,21M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M17,11A5,5 0 0,0 12,6A5,5 0 0,0 7,11V18H17V11M19.75,3.19L18.33,4.61C20.04,6.3 21,8.6 21,11H23C23,8.07 21.84,5.25 19.75,3.19M1,11H3C3,8.6 3.96,6.3 5.67,4.61L4.25,3.19C2.16,5.25 1,8.07 1,11Z"/>
+                                    </svg>
+                                </div>
+                                <div class="ai-feature-title">Smart Notifications</div>
+                                <label class="switch small">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <p class="ai-feature-desc">Receive intelligent alerts only for important interactions and high-value followers.</p>
+                        </div>
+                        
+                        <!-- Feature 5 -->
+                        <div class="ai-feature-card">
+                            <div class="ai-feature-header">
+                                <div class="ai-feature-icon">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M9,10V12H7V10H9M13,10V12H11V10H13M17,10V12H15V10H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M9,14V16H7V14H9M13,14V16H11V14H13M17,14V16H15V14H17Z"/>
+                                    </svg>
+                                </div>
+                                <div class="ai-feature-title">Scheduling Assistant</div>
+                                <label class="switch small">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <p class="ai-feature-desc">AI-powered scheduling to determine the best time to post for maximum engagement.</p>
+                        </div>
+                        
+                        <!-- Feature 6 -->
+                        <div class="ai-feature-card">
+                            <div class="ai-feature-header">
+                                <div class="ai-feature-icon">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path fill="currentColor" d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z"/>
+                                    </svg>
+                                </div>
+                                <div class="ai-feature-title">Audience Insights</div>
+                                <label class="switch small">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <p class="ai-feature-desc">Deep analysis of your follower base to discover patterns and engagement opportunities.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Premium Plans -->
+                <div class="ai-section">
+                    <div class="ai-section-header">
+                        <h4>
+                            <svg viewBox="0 0 24 24" width="18" height="18">
+                                <path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+                            </svg>
+                            Premium Plans
+                        </h4>
+                        <span class="ai-premium-badge">NEW</span>
+                    </div>
+                    
+                    <div class="ai-plans-grid">
+                        <!-- Basic Plan -->
+                        <div class="ai-plan-card">
+                            <div class="ai-plan-header">
+                                <h5>Basic</h5>
+                                <div class="ai-plan-price">
+                                    <span class="price-value">$4.99</span>
+                                    <span class="price-period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="ai-plan-features">
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>5 AI analyses per day</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Content suggestions</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Basic analytics dashboard</span>
+                                </li>
+                            </ul>
+                            <button class="ai-plan-button">Subscribe</button>
+                        </div>
+                        
+                        <!-- Pro Plan -->
+                        <div class="ai-plan-card featured">
+                            <div class="ai-plan-popular">Most Popular</div>
+                            <div class="ai-plan-header">
+                                <h5>Pro</h5>
+                                <div class="ai-plan-price">
+                                    <span class="price-value">$9.99</span>
+                                    <span class="price-period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="ai-plan-features">
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Unlimited AI analyses</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>All Basic features</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Scheduling assistant</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Enhanced analytics</span>
+                                </li>
+                            </ul>
+                            <button class="ai-plan-button primary">Subscribe</button>
+                        </div>
+                        
+                        <!-- Business Plan -->
+                        <div class="ai-plan-card">
+                            <div class="ai-plan-header">
+                                <h5>Business</h5>
+                                <div class="ai-plan-price">
+                                    <span class="price-value">$19.99</span>
+                                    <span class="price-period">/month</span>
+                                </div>
+                            </div>
+                            <ul class="ai-plan-features">
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>All Pro features</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Team collaboration</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Custom reporting</span>
+                                </li>
+                                <li>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                                    </svg>
+                                    <span>Priority support</span>
+                                </li>
+                            </ul>
+                            <button class="ai-plan-button">Subscribe</button>
+                        </div>
+                    </div>
+                    <p class="ai-plans-note">All plans include a 7-day free trial. Cancel anytime with no questions asked.</p>
+                </div>
+            </section>
+            
+            <!-- Developer Options Section -->
+            <section class="settings-section" id="developer">
+                <div class="settings-section-header">
+                    <div class="settings-icon">⚙️</div>
+                    <h3>Developer Options</h3>
+                </div>
+                <p class="settings-info">Advanced options for development and testing</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-option">
+                        <label for="debugModeToggle" class="toggle-label">Debug Mode</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="debugModeToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="showTestTab" class="toggle-label">Show Test Tab</label>
+                        <button id="showTestTab" class="settings-save-btn">Enable Test Tab</button>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="consoleLogsToggle" class="toggle-label">Verbose Console Logs</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="consoleLogsToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="networkLogToggle" class="toggle-label">Network Request Logging</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="networkLogToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option settings-option-vertical">
+                            <label for="apiEndpointInput" class="toggle-label">Custom API Endpoint</label>
+                            <div class="settings-input-container" style="margin: 0;">
+                                <input type="text" id="apiEndpointInput" placeholder="Enter custom API endpoint URL" class="settings-input">
+                                <button id="saveApiEndpoint" class="settings-save-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option settings-option-vertical">
+                            <label class="toggle-label">Developer Tools</label>
+                            <div class="settings-buttons">
+                                <button id="viewLogsBtn" class="settings-save-btn">View Logs</button>
+                                <button id="testApisBtn" class="settings-save-btn">Test API Connectivity</button>
+                                <button id="resetConfigBtn" class="settings-danger-btn">Reset Configuration</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- About Section -->
+            <section class="settings-section" id="about">
+                <div class="settings-section-header">
+                    <div class="settings-icon">ℹ️</div>
+                    <h3>About</h3>
+                </div>
+                <p class="settings-info">Information about this extension</p>
+                
+                <div class="settings-grid">
+                    <div class="settings-grid-full">
+                        <div class="settings-option">
+                            <div class="about-info" style="width: 100%;">
+                                <div style="display: flex; align-items: center; gap: 20px;">
+                                    <img src="icon.png" alt="Twitter Stats Analyzer" width="80" height="80" style="border-radius: 12px;">
+                                    <div>
+                                        <p style="font-size: 22px; font-weight: 600; margin-bottom: 5px;">Twitter Stats Analyzer</p>
+                                        <p style="font-size: 16px; color: var(--light-text-secondary); margin-bottom: 15px;">Version 1.2.0</p>
+                                    </div>
+                                </div>
+                                <p style="font-size: 15px; margin: 20px 0; line-height: 1.6;">
+                                    A powerful extension that helps you analyze Twitter profiles, track verified followers, 
+                                    bulk follow users, auto interact with tweets, and block ads.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option settings-option-vertical">
+                        <label class="toggle-label">Features</label>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;">Track followers and unfollowers</li>
+                            <li style="margin-bottom: 8px;">Identify verified accounts following you</li>
+                            <li style="margin-bottom: 8px;">Bulk follow/unfollow users</li>
+                            <li style="margin-bottom: 8px;">Auto-interact with tweets</li>
+                            <li style="margin-bottom: 8px;">Advanced statistics and analytics</li>
+                            <li style="margin-bottom: 8px;">Ad blocking for a cleaner Twitter experience</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="settings-option settings-option-vertical">
+                        <label class="toggle-label">Useful Links</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                            <a href="https://github.com/azorkai/twitter-stats" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 18px;">📦</span> GitHub Repository
+                            </a>
+                            <a href="https://azorkai.com/twitter-stats/docs" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 18px;">📚</span> Documentation
+                            </a>
+                            <a href="https://azorkai.com/twitter-stats/feedback" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 18px;">💬</span> Feedback
+                            </a>
+                            <a href="https://azorkai.com/twitter-stats/changelog" target="_blank" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 18px;">📝</span> Changelog
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid-full">
+                        <div class="settings-option settings-option-vertical" style="align-items: center; text-align: center;">
+                            <p style="font-size: 15px; margin-bottom: 15px;">Developed by: <a href="https://github.com/azorkai" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">azorkai</a></p>
+                            
+                            <div class="support-button-settings" style="margin-top: 10px;">
+                                <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
+                                    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=azorkai&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <button id="backButton" class="back-button">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
+                </svg>
+                Return to Extension
+            </button>
+        </main>
+    </div>
+    
+    <script src="settings.js"></script>
+</body>
+</html> 

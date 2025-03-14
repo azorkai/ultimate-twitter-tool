@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Stats Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        /* Ayarlar butonu için ek stiller */
+        #settingsIconButton {
+            position: fixed !important;
+            top: 10px !important;
+            right: 15px !important;
+            background-color: #1DA1F2 !important;
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 9999 !important;
+            border: none !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        #settingsIconButton svg {
+            width: 24px !important;
+            height: 24px !important;
+            fill: white !important;
+            display: block !important;
+        }
+
+        /* Reklam engelleyici için ek stiller */
+        .ad-blocker-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #e1e8ed;
+        }
+        
+        .ad-blocker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .ad-blocker-title {
+            font-weight: 600;
+            color: #1DA1F2;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ad-blocker-title svg {
+            margin-right: 8px;
+            fill: #1DA1F2;
+        }
+        
+        .ad-blocker-toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .ad-blocker-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .ad-blocker-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .ad-blocker-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .ad-blocker-slider {
+            background-color: #1DA1F2;
+        }
+        
+        input:checked + .ad-blocker-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .ad-blocker-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .ad-blocker-stat {
+            text-align: center;
+            flex: 1;
+            padding: 8px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ad-blocker-stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1DA1F2;
+            margin-bottom: 5px;
+        }
+        
+        .ad-blocker-stat-label {
+            color: #657786;
+            font-size: 12px;
+        }
+        
+        /* Ad blocker options styles */
+        .ad-blocker-options {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f0f3f5;
+            border-radius: 8px;
+        }
+        
+        .ad-blocker-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .toggle-label {
+            font-size: 14px;
+            color: #14171a;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-input:checked + .toggle-slider {
+            background-color: #1DA1F2;
+        }
+        
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .ad-blocker-option-description {
+            font-size: 12px;
+            color: #657786;
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        /* Animasyon efekti */
+        @keyframes rotateGear {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .settings-btn-container .tab-btn:hover svg {
+            animation: rotateGear 1s linear infinite;
+        }
+        
+        /* Tooltip */
+        .settings-btn-container .tab-btn::after {
+            content: "Settings";
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background-color: rgba(29, 161, 242, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .settings-btn-container .tab-btn:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="settings-btn-container">
+                <button id="settingsIconButton" class="tab-btn" title="Settings">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+            <div class="profile-info" style="display: none;">
+                <div class="profile-header">
+                    <div class="profile-image-container">
+                        <img id="profileImage" src="" alt="Profile Image" class="profile-image">
+                    </div>
+                    <div class="profile-name-container">
+                        <div class="profile-name">
+                            <span id="displayName"></span>
+                            <span id="verifiedBadge" class="verified-badge" style="display: none;">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#1DA1F2" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path></svg>
+                            </span>
+                        </div>
+                        <div id="username" class="profile-username"></div>
+                    </div>
+                </div>
+                <div id="profileBio" class="profile-bio"></div>
+                <div class="profile-meta">
+                    <div id="profileLocation" class="meta-item" style="display: none;">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#657786" d="M12 14.315c-2.088 0-3.787-1.698-3.787-3.786S9.913 6.74 12 6.74s3.787 1.7 3.787 3.787-1.7 3.785-3.787 3.785zm0-6.073c-1.26 0-2.287 1.026-2.287 2.287S10.74 12.814 12 12.814s2.287-1.025 2.287-2.286S13.26 8.24 12 8.24z"></path><path fill="#657786" d="M20.692 10.69C20.692 5.9 16.792 2 12 2s-8.692 3.9-8.692 8.69c0 1.902.603 3.708 1.743 5.223l.003-.002.007.015c1.628 2.07 6.278 5.757 6.475 5.912.138.11.302.163.465.163.165 0 .33-.053.467-.162.197-.155 4.847-3.84 6.475-5.912l.007-.014.002.002c1.14-1.516 1.742-3.32 1.742-5.223z"></path></svg>
+                        <span id="locationText"></span>
+                    </div>
+                    <div id="profileWebsite" class="meta-item" style="display: none;">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#657786" d="M11.96 14.945c-.067 0-.136-.01-.203-.027-1.13-.318-2.097-.986-2.795-1.932-.832-1.125-1.176-2.508-.968-3.893s.942-2.605 2.068-3.438l3.53-2.608c2.322-1.716 5.61-1.224 7.33 1.1.83 1.127 1.175 2.51.967 3.895s-.943 2.605-2.07 3.438l-1.48 1.094c-.333.246-.804.175-1.05-.158-.246-.334-.176-.804.158-1.05l1.48-1.095c.803-.592 1.327-1.463 1.476-2.45.148-.988-.098-1.975-.69-2.778-1.225-1.656-3.572-2.01-5.23-.784l-3.53 2.608c-.802.593-1.326 1.464-1.475 2.45-.15.99.097 1.975.69 2.778.498.675 1.187 1.15 1.992 1.377.4.114.633.528.52.928-.092.33-.394.547-.722.547z"></path><path fill="#657786" d="M7.27 22.054c-1.61 0-3.197-.735-4.225-2.125-.832-1.127-1.176-2.51-.968-3.894s.943-2.605 2.07-3.438l1.478-1.094c.334-.245.805-.175 1.05.158s.177.804-.157 1.05l-1.48 1.095c-.803.593-1.326 1.464-1.475 2.45-.148.99.097 1.975.69 2.778 1.225 1.657 3.57 2.01 5.23.785l3.528-2.608c1.658-1.225 2.01-3.57.785-5.23-.498-.674-1.187-1.15-1.992-1.376-.4-.113-.633-.527-.52-.927.112-.4.528-.63.926-.522 1.13.318 2.096.986 2.794 1.932 1.717 2.324 1.224 5.612-1.1 7.33l-3.53 2.608c-.933.693-2.023 1.026-3.105 1.026z"></path></svg>
+                        <a id="websiteLink" href="#" target="_blank"></a>
+                    </div>
+                    <div id="profileJoinDate" class="meta-item" style="display: none;">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#657786" d="M19.708 2H4.292C3.028 2 2 3.028 2 4.292v15.416C2 20.972 3.028 22 4.292 22h15.416C20.972 22 22 20.972 22 19.708V4.292C22 3.028 20.972 2 19.708 2zm.792 17.708c0 .437-.355.792-.792.792H4.292c-.437 0-.792-.355-.792-.792V6.418c0-.437.354-.79.79-.792h15.42c.436 0 .79.355.79.79V19.71z"></path><circle fill="#657786" cx="7.032" cy="8.75" r="1.285"></circle><circle fill="#657786" cx="7.032" cy="13.156" r="1.285"></circle><circle fill="#657786" cx="16.968" cy="8.75" r="1.285"></circle><circle fill="#657786" cx="16.968" cy="13.156" r="1.285"></circle><circle fill="#657786" cx="12" cy="8.75" r="1.285"></circle><circle fill="#657786" cx="12" cy="13.156" r="1.285"></circle><circle fill="#657786" cx="7.032" cy="17.486" r="1.285"></circle><circle fill="#657786" cx="12" cy="17.486" r="1.285"></circle></svg>
+                        <span id="joinDateText"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="tabs-container">
+            <div class="tabs">
+                <button id="profileStatsTab" class="tab-btn active">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M3,22V8H7V22H3M10,22V2H14V22H10M17,22V14H21V22H17Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Stats</span>
+                </button>
+                <button id="verifiedFollowersTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Verified</span>
+                </button>
+                <button id="followBackTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M13,8V4H7V8H13M13,10H7C5.9,10 5,10.9 5,12V20H7V17H13V20H15V12C15,10.9 14.1,10 13,10M13,15H7V12H13V15M21,5H17V7H21V17H17V19H21C22.1,19 23,18.1 23,17V7C23,5.9 22.1,5 21,5M3,7H7V5H3C1.9,5 1,5.9 1,7V17C1,18.1 1.9,19 3,19H7V17H3V7Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Follow Back</span>
+                </button>
+                <button id="bulkFollowTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Follow</span>
+                </button>
+                <button id="autoInteractTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M18,8H6V6H18V8M18,11H6V9H18V11M18,14H6V12H18V14M22,4A2,2 0 0,0 20,2H4A2,2 0 0,0 2,4V16A2,2 0 0,0 4,18H18L22,22V4Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Interact</span>
+                </button>
+                <button id="prankProfileTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,9C13.31,9 14.42,9.83 14.83,11H18C17.44,7.61 14.97,5 12,5C8.13,5 5,8.13 5,12C5,15.87 8.13,19 12,19C14.97,19 17.44,16.39 18,13H14.83C14.42,14.17 13.31,15 12,15C10.34,15 9,13.66 9,12C9,10.34 10.34,9 12,9Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Prank</span>
+                </button>
+                <button id="adBlockerTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10-4.48 10-10S17.52,2 12,2zm0,18c-4.42,0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9,18.31C15.55,19.37 13.85,20 12,20zm6.31-3.1L7.1,5.69C8.45,4.63 10.15,4 12,4c4.42,0 8 3.58 8 8 0 1.85-.63,3.55-1.69,4.9z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Ad Blocker</span>
+                </button>
+                <button id="arkoseSolverTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Arkose Solver</span>
+                </button>
+                <button id="donateTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Donate</span>
+                </button>
+                <button id="changelogTab" class="tab-btn">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M17,21L14.25,18L15.41,16.84L17,18.43L20.59,14.84L21.75,16.25M12.8,21H5C3.89,21 3,20.11 3,19V5C3,3.89 3.89,3 5,3H19C20.11,3 21,3.89 21,5V12.8C20.39,12.45 19.72,12.2 19,12.08V5H5V19H12.08C12.2,19.72 12.45,20.39 12.8,21M12,17.08C12,17.71 12.12,18.33 12.34,18.91L7,19L9.5,16.5L7,14L12,13.97V17.08M14.08,13.93L17.93,13.9L15.5,16.35L17.95,18.9L13.93,19C13.35,18.67 12.85,18.25 12.44,17.73L12.44,17.71L12.47,17.74C12.21,17.19 12.08,16.86 12.08,16.08V13.93L14.08,13.93M18.5,7.6L15.5,10.6L13.5,8.6L14.9,7.2L15.5,7.8L18.5,4.8L19.9,6.2L18.5,7.6Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Updates</span>
+                </button>
+                <button id="hiddenTestTab" class="tab-btn" style="display: none;">
+                    <span class="tab-icon">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z"/>
+                        </svg>
+                    </span>
+                    <span class="tab-text">Test</span>
+                </button>
+            </div>
+            
+            <div id="profileStatsContent" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">Tweets</div>
+                        <div id="tweetCount" class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Following</div>
+                        <div id="followingCount" class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Followers</div>
+                        <div id="followerCount" class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Verified Followers</div>
+                        <div id="verifiedFollowerCount" class="stat-value">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="verifiedFollowersContent" class="tab-content" style="display: none;">
+                <div class="view-options">
+                    <button id="toggleView" class="toggle-btn" title="Toggle View Mode">
+                        <span class="card-icon">Cards</span>
+                        <span class="raw-icon">Raw</span>
+                    </button>
+                    <button id="exportBtn" class="export-btn" title="Export Followers">
+                        <span>Export</span>
+                    </button>
+                    <button id="checkVerifiedFollowers" class="action-btn" title="Check Verified Followers">
+                        <span>Check Verified Followers</span>
+                    </button>
+                </div>
+                
+                <div class="follower-count-container">
+                    <span id="verifiedFollowersCount">0</span> verified followers found
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stats-header">
+                        <h3>History</h3>
+                        <button id="toggleStats" class="toggle-stats-btn" title="Toggle Statistics">
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stat-item">
+                            <div class="stat-label">Last Fetch:</div>
+                            <div id="lastFetchDate" class="stat-value">Never</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">New Verified Followers:</div>
+                            <div id="newFollowersCount" class="stat-value">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Total Fetches:</div>
+                            <div id="totalFetches" class="stat-value">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="followers-container">
+                    <div id="followersList" class="followers-grid"></div>
+                    <div id="rawFollowersList" class="raw-followers" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <div id="followBackContent" class="tab-content" style="display: none;">
+                <div class="follow-back-container">
+                    <div class="follow-back-header">
+                        <h3>Follow Back Verified Users</h3>
+                        <p class="follow-back-description">Check your verified followers and automatically follow back those who follow you.</p>
+                    </div>
+                    
+                    <div class="follow-back-card">
+                        <div class="follow-back-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">LAST CHECK</div>
+                                <div id="lastFollowBackCheck" class="stat-value">
+                                    <span class="date-time">Yesterday</span>
+                                    <span class="date-day">at 17:58</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">FOLLOWED</div>
+                                <div id="followedBackCount" class="stat-value">9</div>
+                            </div>
+                        </div>
+                        
+                        <div class="follow-back-options">
+                            <div class="follow-back-option">
+                                <label for="followBackDelay">Delay between actions</label>
+                                <input type="number" id="followBackDelay" min="1" max="30" value="5" class="delay-input">
+                            </div>
+                        </div>
+                        
+                        <div class="follow-back-actions">
+                            <button id="autoFollowBack" class="action-btn">
+                                <span class="btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="white"/>
+                                        <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" fill="white"/>
+                                    </svg>
+                                </span>
+                                <span class="btn-text">Follow Back Verified Users</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="follow-back-progress" style="display: none;">
+                        <div class="progress-header">
+                            <span>Progress</span>
+                            <span id="followBackProgressCounter">0/0</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="followBackProgressBar" class="progress-bar"></div>
+                        </div>
+                        <div class="progress-status">
+                            <span id="progressStatus">Waiting to start...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="bulkFollowContent" class="tab-content" style="display: none;">
+                <div class="bulk-follow-container">
+                    <div class="bulk-follow-header">
+                        <h3>BULK Follow</h3>
+                        <p class="bulk-follow-description">Enter Twitter usernames or URLs (one per line) to follow them automatically.</p>
+                        <p class="bulk-follow-examples">Examples: @username, username, https://x.com/username</p>
+                    </div>
+                    
+                    <div class="bulk-follow-input-container">
+                        <textarea id="bulkFollowInput" class="bulk-follow-input" placeholder="@username1&#10;@username2&#10;@username3"></textarea>
+                    </div>
+                    
+                    <div class="bulk-follow-options">
+                        <div class="bulk-follow-option">
+                            <label for="delayInput">Delay between follows (seconds):</label>
+                            <input type="number" id="delayInput" min="1" max="30" value="5" class="delay-input">
+                        </div>
+                    </div>
+                    
+                    <div class="bulk-follow-actions">
+                        <button id="startBulkFollow" class="bulk-follow-btn">Start Following</button>
+                        <button id="stopBulkFollow" class="bulk-follow-btn stop-btn" disabled>Stop</button>
+                    </div>
+                    
+                    <div class="bulk-follow-progress" style="display: none;">
+                        <div class="progress-header">
+                            <span>Progress:</span>
+                            <span id="progressCounter">0/0</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="progressBar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bulk-follow-results">
+                        <div id="bulkFollowResults" class="results-list"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="autoInteractContent" class="tab-content" style="display: none;">
+                <div class="auto-interact-container">
+                    <div class="auto-interact-header">
+                        <h3>Auto Interact</h3>
+                        <p class="auto-interact-description">Automatically like and retweet posts on Twitter.</p>
+                    </div>
+                    
+                    <!-- Mobil görünüm için basitleştirilmiş ayarlar bölümü - tamamen yeni yapı -->
+                    <div class="interact-settings-mobile">
+                        <div class="interact-setting-item">
+                            <span class="interact-label">Like Posts</span>
+                            <div class="interact-checkbox-container">
+                                <input type="checkbox" id="interactLikeOption" class="interact-checkbox" checked>
+                                <label for="interactLikeOption" class="interact-checkbox-label">
+                                    <span class="interact-checkbox-button"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="interact-setting-item">
+                            <span class="interact-label">Retweet Posts</span>
+                            <div class="interact-checkbox-container">
+                                <input type="checkbox" id="interactRetweetOption" class="interact-checkbox" checked>
+                                <label for="interactRetweetOption" class="interact-checkbox-label">
+                                    <span class="interact-checkbox-button"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="interact-setting-item">
+                            <span class="interact-label">Delay (seconds):</span>
+                            <input type="number" id="interactionDelay" min="5" max="60" value="5" class="interact-input">
+                        </div>
+                        
+                        <div class="interact-setting-item">
+                            <span class="interact-label">Max interactions:</span>
+                            <input type="number" id="maxInteractions" min="0" max="1000" value="0" class="interact-input">
+                        </div>
+                    </div>
+                    
+                    <div class="auto-interact-actions">
+                        <button id="startAutoInteract" class="auto-interact-btn">Start Auto Interact</button>
+                        <button id="stopAutoInteract" class="auto-interact-btn stop-btn" disabled>Stop</button>
+                    </div>
+                    
+                    <div id="interactionProgress" class="auto-interact-progress" style="display: none;">
+                        <div class="progress-header">
+                            <span>Progress:</span>
+                            <span id="interactionCounter">0</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="interactionProgressBar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="auto-interact-results">
+                        <h4>Interaction Results</h4>
+                        <div id="interactionResults" class="results-list"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="hiddenTestContent" class="tab-content" style="display: none;">
+                <div class="section">
+                    <h3>Hidden Test</h3>
+                    <p>This is a hidden test feature that opens Twitter in the background.</p>
+                    
+                    <div class="settings-section">
+                        <h4>Background Tab Options</h4>
+                        <div class="settings-option">
+                            <label for="closeAfterOpenToggle" class="toggle-label">Close popup after opening</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="closeAfterOpenToggle" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-option">
+                            <label for="twitterUrl" class="input-label">Twitter URL:</label>
+                            <input type="text" id="twitterUrl" value="https://twitter.com" class="settings-input">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-option" style="margin-top: 20px;">
+                        <button id="openTwitterInBackground" class="action-button">Open Twitter in Background</button>
+                    </div>
+                    
+                    <div id="hiddenTestStatus" class="status-message"></div>
+                    
+                    <div class="settings-section" style="margin-top: 20px;">
+                        <h4>Background Tab Management</h4>
+                        <div class="settings-option">
+                            <button id="listBackgroundTabs" class="settings-save-btn">List Background Tabs</button>
+                            <button id="closeAllBackgroundTabs" class="settings-save-btn" style="margin-left: 10px; background-color: #ff5f5f;">Close All Background Tabs</button>
+                        </div>
+                        <div id="backgroundTabsList" class="target-list" style="margin-top: 10px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Prank Profile Tab Content -->
+            <div id="prankProfileContent" class="tab-content" style="display: none;">
+                <div class="prank-profile-section">
+                    <div class="prank-profile-header">
+                        <div class="prank-profile-title">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M12 2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,9C13.31,9 14.42,9.83 14.83,11H18C17.44,7.61 14.97,5 12,5C8.13,5 5,8.13 5,12C5,15.87 8.13,19 12,19C14.97,19 17.44,16.39 18,13H14.83C14.42,14.17 13.31,15 12,15C10.34,15 9,13.66 9,12C9,10.34 10.34,9 12,9Z"/>
+                            </svg>
+                            Prank Twitter Profile
+                        </div>
+                    </div>
+                    <p>Change how your Twitter profile stats appear to you (only visual changes, not actual changes).</p>
+                    
+                    <div class="prank-profile-form">
+                        <div class="prank-profile-input-group">
+                            <label for="prankFollowers">Followers Count:</label>
+                            <input type="number" id="prankFollowers" class="prank-profile-input" placeholder="e.g. 1000000">
+                        </div>
+                        
+                        <div class="prank-profile-input-group">
+                            <label for="prankFollowing">Following Count:</label>
+                            <input type="number" id="prankFollowing" class="prank-profile-input" placeholder="e.g. 500">
+                        </div>
+                        
+                        <div class="prank-profile-input-group">
+                            <label for="prankPosts">Posts Count:</label>
+                            <input type="number" id="prankPosts" class="prank-profile-input" placeholder="e.g. 5000">
+                        </div>
+                        
+                        <div class="prank-profile-input-group">
+                            <label for="prankVerified">Verified Status:</label>
+                            <select id="prankVerified" class="prank-profile-select">
+                                <option value="none">No Change</option>
+                                <option value="blue">Blue Verified</option>
+                                <option value="gold">Gold Verified</option>
+                                <option value="gray">Gray Verified</option>
+                                <option value="diamond">Diamond Verified</option>
+                                <option value="rainbow">Rainbow Verified</option>
+                                <option value="red">Red Verified</option>
+                                <option value="crown">Crown Verified</option>
+                                <option value="star">Star Verified</option>
+                                <option value="dark">Dark Mode Verified</option>
+                            </select>
+                        </div>
+                        
+                        <div class="prank-profile-input-group">
+                            <div class="prank-profile-checkbox-container">
+                                <input type="checkbox" id="prankBlurUsername" class="prank-profile-checkbox">
+                                <label for="prankBlurUsername">Blur Username</label>
+                            </div>
+                            <p class="prank-profile-option-description">Blur your username after @ symbol for privacy</p>
+                        </div>
+                        
+                        <div class="prank-profile-actions">
+                            <button id="applyPrankButton" class="prank-profile-button">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                                Apply Changes
+                            </button>
+                            <button id="resetPrankButton" class="prank-profile-button prank-profile-button-secondary">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                                </svg>
+                                Reset
+                            </button>
+                        </div>
+                        
+                        <div class="prank-profile-actions" style="margin-top: 15px;">
+                            <button id="captureProfileButton" class="prank-profile-button prank-profile-button-capture">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                                </svg>
+                                Capture Profile Screenshot
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="prank-profile-note">
+                        <p><strong>Note:</strong> These changes are only visible to you and do not affect your actual Twitter profile.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ad Blocker Tab Content -->
+            <div id="adBlockerContent" class="tab-content" style="display: none;">
+                <div class="ad-blocker-section">
+                    <div class="ad-blocker-header">
+                        <div class="ad-blocker-title">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M12 2C6.48 2 2,6.48 2,12s4.48,10 10,10 10-4.48 10-10S17.52,2 12,2zm0,18c-4.42,0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9,18.31C15.55,19.37 13.85,20 12,20zm6.31-3.1L7.1,5.69C8.45,4.63 10.15,4 12,4c4.42,0 8 3.58 8 8 0 1.85-.63,3.55-1.69,4.9z"/>
+                            </svg>
+                            Ad Blocker
+                        </div>
+                        <label class="ad-blocker-toggle">
+                            <input type="checkbox" id="adBlockerToggle" checked>
+                            <span class="ad-blocker-slider"></span>
+                        </label>
+                    </div>
+                    <p>Automatically blocks and hides all ads on Twitter.</p>
+                    
+                    <div class="ad-blocker-options">
+                        <div class="ad-blocker-option">
+                            <label for="adBlockerPanelToggle" class="toggle-label">Show Ad Blocker Panel</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="adBlockerPanelToggle" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                        <p class="ad-blocker-option-description">Show or hide the ad blocker panel on Twitter pages.</p>
+                        
+                        <div class="ad-blocker-option">
+                            <label for="removeAdsToggle" class="toggle-label">Remove Ads Completely</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="removeAdsToggle" class="toggle-input" checked>
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                        <p class="ad-blocker-option-description">When enabled, ads will be completely removed instead of showing "THIS AD HAS BEEN BLOCKED".</p>
+                        
+                        <div class="ad-blocker-option">
+                            <label for="chillModeToggle" class="toggle-label">Chill Mode</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="chillModeToggle" class="toggle-input">
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                        <p class="ad-blocker-option-description">Replace ads with cute cat photos for a more relaxing experience.</p>
+                    </div>
+                    
+                    <div class="ad-blocker-stats">
+                        <div class="ad-blocker-stat">
+                            <div class="ad-blocker-stat-value" id="blockedAdsCount">0</div>
+                            <div class="ad-blocker-stat-label">Blocked Ads</div>
+                        </div>
+                        <div class="ad-blocker-stat">
+                            <div class="ad-blocker-stat-value" id="lastBlockedTime">-</div>
+                            <div class="ad-blocker-stat-label">Last Blocked</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arkose Solver Tab Content -->
+            <div id="arkoseSolverContent" class="tab-content" style="display: none;">
+                <div class="arkose-solver-section" style="background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 10px; border: 1px solid #e1e8ed;">
+                    <div class="arkose-solver-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div class="arkose-solver-title" style="font-weight: 600; color: #1DA1F2; display: flex; align-items: center;">
+                            <svg viewBox="0 0 24 24" width="24" height="24" style="margin-right: 10px;">
+                                <path fill="#1DA1F2" d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/>
+                            </svg>
+                            Arkose Solver
+                        </div>
+                        <div class="arkose-solver-badge" style="background-color: #1DA1F2; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                            COMING SOON
+                        </div>
+                    </div>
+                    
+                    <div class="arkose-solver-description" style="margin-bottom: 20px;">
+                        <p style="color: #14171a; font-size: 14px; line-height: 1.5;">
+                            Automatically solve Arkose Labs CAPTCHA challenges on Twitter to enhance your experience and save time.
+                        </p>
+                    </div>
+                    
+                    <div class="arkose-solver-coming-soon" style="text-align: center; padding: 30px 20px; background-color: #f2f7fb; border-radius: 8px; margin: 20px 0;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">🚀</div>
+                        <h3 style="font-size: 24px; color: #1DA1F2; margin-bottom: 15px;">Coming Soon!</h3>
+                        <p style="font-size: 16px; color: #657786; max-width: 500px; margin: 0 auto 20px;">
+                            We're working on an advanced Arkose Labs CAPTCHA solver to make your Twitter experience even smoother.
+                            This feature will be available in the next update.
+                        </p>
+                        
+                        <div style="background-color: rgba(29, 161, 242, 0.1); padding: 15px; border-radius: 8px; display: inline-block;">
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <svg viewBox="0 0 24 24" width="20" height="20" style="margin-right: 8px;">
+                                    <path fill="#1DA1F2" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                                </svg>
+                                <span style="font-weight: 600; color: #1DA1F2;">Expected Release: Q3 2023</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arkose-solver-features" style="margin-top: 30px;">
+                        <h4 style="font-size: 16px; color: #14171a; margin-bottom: 15px;">Upcoming Features:</h4>
+                        <ul style="list-style-type: none; padding: 0; margin: 0;">
+                            <li style="display: flex; align-items: center; margin-bottom: 10px; color: #657786;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 10px; min-width: 18px;">
+                                    <path fill="#1DA1F2" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                                </svg>
+                                Automatic CAPTCHA detection and solving
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: 10px; color: #657786;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 10px; min-width: 18px;">
+                                    <path fill="#1DA1F2" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                                </svg>
+                                Support for all types of Arkose Labs challenges
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: 10px; color: #657786;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 10px; min-width: 18px;">
+                                    <path fill="#1DA1F2" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                                </svg>
+                                Customizable solving speed and accuracy
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: 10px; color: #657786;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 10px; min-width: 18px;">
+                                    <path fill="#1DA1F2" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                                </svg>
+                                Statistics and performance tracking
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="arkose-solver-signup" style="margin-top: 30px;">
+                        <button id="notifyMeBtn" style="background-color: #1DA1F2; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; box-shadow: 0 2px 5px rgba(29, 161, 242, 0.3);">
+                            <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 8px;">
+                                <path fill="white" d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21"/>
+                            </svg>
+                            Notify Me When Available
+                        </button>
+                        <p style="font-size: 12px; color: #657786; margin-top: 10px;">
+                            We'll notify you as soon as the Arkose Solver feature is available.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donate Tab Content -->
+            <div id="donateContent" class="tab-content" style="display: none;">
+                <div class="donate-container">
+                    <div class="donate-header">
+                        <h3>Support Our Work</h3>
+                        <p class="donate-description">If you find this extension useful, please consider supporting our work with a donation.</p>
+                    </div>
+                    
+                    <div class="donate-options">
+                        <div class="donate-section">
+                            <h4>Buy Me a Coffee</h4>
+                            <p class="donate-info">Support us with a one-time or monthly donation</p>
+                            
+                            <div class="donate-button">
+                                <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
+                                    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=azorkai&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee" />
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="donate-section">
+                            <h4>Cryptocurrency Donations</h4>
+                            <p class="donate-info">Support us with cryptocurrency</p>
+                            
+                            <div class="crypto-options">
+                                <div class="crypto-item">
+                                    <div class="crypto-icon">
+                                        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Bitcoin" width="32" height="32">
+                                    </div>
+                                    <div class="crypto-details">
+                                        <div class="crypto-name">Bitcoin (BTC)</div>
+                                        <div class="crypto-address">bc1pmxenmj23k3nylal5rts47j9zgztx5a3gjs0n5k5g7c2jfz266qxqj3dtr8</div>
+                                        <button class="copy-address-btn" data-address="bc1pmxenmj23k3nylal5rts47j9zgztx5a3gjs0n5k5g7c2jfz266qxqj3dtr8">Copy</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="crypto-item">
+                                    <div class="crypto-icon">
+                                        <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" alt="Ethereum" width="32" height="32">
+                                    </div>
+                                    <div class="crypto-details">
+                                        <div class="crypto-name">Ethereum (ETH)</div>
+                                        <div class="crypto-address">0x585d2cdd09904fa9a3cd1daebe0bf29504ec9a2b</div>
+                                        <button class="copy-address-btn" data-address="0x585d2cdd09904fa9a3cd1daebe0bf29504ec9a2b">Copy</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="crypto-item">
+                                    <div class="crypto-icon">
+                                        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB" width="32" height="32">
+                                    </div>
+                                    <div class="crypto-details">
+                                        <div class="crypto-name">Binance Coin (BNB)</div>
+                                        <div class="crypto-address">0x585d2cdd09904fa9a3cd1daebe0bf29504ec9a2b</div>
+                                        <button class="copy-address-btn" data-address="0x585d2cdd09904fa9a3cd1daebe0bf29504ec9a2b">Copy</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="crypto-item">
+                                    <div class="crypto-icon">
+                                        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="Solana" width="32" height="32">
+                                    </div>
+                                    <div class="crypto-details">
+                                        <div class="crypto-name">Solana (SOL)</div>
+                                        <div class="crypto-address">977VCA282DJknaSKaTd86ApFiLoFzwpYqojcKXEQ8as</div>
+                                        <button class="copy-address-btn" data-address="977VCA282DJknaSKaTd86ApFiLoFzwpYqojcKXEQ8as">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="donate-section">
+                            <h4>Other Ways to Support</h4>
+                            <p class="donate-info">You can also support us by:</p>
+                            
+                            <ul class="support-list">
+                                <li>Giving us a 5-star rating on the Chrome Web Store</li>
+                                <li>Sharing this extension with your friends</li>
+                                <li>Providing feedback and suggestions for improvement</li>
+                                <li>Contributing to the project on <a href="https://github.com/azorkai" target="_blank">GitHub</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="donate-footer">
+                        <p>Thank you for your support! ❤️</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Changelog Tab Content -->
+            <div id="changelogContent" class="tab-content" style="display: none;">
+                <div class="changelog-container">
+                    <div class="changelog-header">
+                        <h3>What's New</h3>
+                        <p class="changelog-description">Stay updated with the latest changes and improvements to the extension.</p>
+                    </div>
+                    
+                    <div class="changelog-content">
+                        <div class="changelog-loading" id="changelogLoading">
+                            <div class="spinner"></div>
+                            <p>Loading changelog...</p>
+                        </div>
+                        
+                        <div id="changelogError" class="changelog-error" style="display: none;">
+                            <p>Failed to load changelog. Please try again later.</p>
+                            <button id="retryChangelog" class="settings-save-btn">Retry</button>
+                        </div>
+                        
+                        <div id="changelogList" class="changelog-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-area">
+            <button id="fetchStats">Fetch Stats</button>
+            <div id="loading" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+            <button id="openTestTab" class="test-button" style="margin-left: 10px; background-color: #ff5f5f; display: none;">Test Mode</button>
+        </div>
+        
+        <footer class="developer-info">
+            <div class="support-button">
+                <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
+                    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=azorkai&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee" />
+                </a>
+            </div>
+            <p>Developed by: <a href="https://github.com/azorkai" target="_blank">azorkai</a></p>
+        </footer>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>Settings</h3>
+                <button id="closeSettingsModal" class="close-settings-modal">&times;</button>
+            </div>
+            <div class="settings-modal-body">
+                <!-- User Preferences Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">👤</div>
+                        <h4>User Preferences</h4>
+                    </div>
+                    <p class="settings-info">Profile that will be automatically opened when you click the Fetch Stats button</p>
+                    
+                    <div class="settings-input-container">
+                        <input type="text" id="defaultUsername" placeholder="Twitter username" class="settings-input">
+                        <button id="saveDefaultUsername" class="settings-save-btn">Save</button>
+                    </div>
+                    <p id="defaultUsernameStatus" class="settings-status"></p>
+                </div>
+                
+                <!-- Appearance Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">🎨</div>
+                        <h4>Appearance</h4>
+                    </div>
+                    <div class="settings-option">
+                        <label for="darkModeToggle" class="toggle-label">Dark Mode</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <div class="settings-option">
+                        <label for="themeColorSelect" class="toggle-label">Accent Color</label>
+                        <div class="color-picker-container">
+                            <select id="themeColorSelect" class="theme-select">
+                                <option value="default">Twitter Blue</option>
+                                <option value="purple">Purple</option>
+                                <option value="green">Green</option>
+                                <option value="orange">Orange</option>
+                                <option value="pink">Pink</option>
+                            </select>
+                            <div class="color-preview" id="colorPreview"></div>
+                        </div>
+                </div>
+                
+                <!-- Display Options Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">📱</div>
+                        <h4>Display Options</h4>
+                    </div>
+                    <div class="settings-option">
+                        <label for="compactViewToggle" class="toggle-label">Compact View</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="compactViewToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <p class="settings-info">Compact view shows more followers in less space</p>
+                    
+                    <div class="settings-option">
+                        <label for="fontSizeSelect" class="toggle-label">Font Size</label>
+                        <select id="fontSizeSelect" class="settings-select">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Notification Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">🔔</div>
+                        <h4>Notifications</h4>
+                    </div>
+                    <div class="settings-option">
+                        <label for="notificationsToggle" class="toggle-label">Enable Notifications</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="notificationsToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <p class="settings-info">Get notified when new verified followers are detected</p>
+                    
+                    <div class="settings-option">
+                        <label for="soundToggle" class="toggle-label">Notification Sound</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Privacy Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">🔒</div>
+                        <h4>Privacy</h4>
+                    </div>
+                    <div class="settings-option">
+                        <label for="saveHistoryToggle" class="toggle-label">Save Interaction History</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="saveHistoryToggle" class="toggle-input" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <p class="settings-info">Store history of your interactions and verified followers</p>
+                    
+                    <div class="settings-option">
+                        <button id="clearDataBtn" class="settings-danger-btn">Clear All Data</button>
+                    </div>
+                </div>
+                
+                <!-- Developer Options Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">⚙️</div>
+                        <h4>Developer Options</h4>
+                    </div>
+                    <div class="settings-option">
+                        <button id="showTestTab" class="settings-save-btn">Show Test Tab</button>
+                    </div>
+                    <p class="settings-info">Shows the hidden test tab for development purposes</p>
+                    
+                    <div class="settings-option">
+                        <label for="debugModeToggle" class="toggle-label">Debug Mode</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="debugModeToggle" class="toggle-input">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <p class="settings-info">Enable detailed logging in the console</p>
+                </div>
+                
+                <!-- About Section -->
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <div class="settings-icon">ℹ️</div>
+                        <h4>About</h4>
+                    </div>
+                    <div class="about-info">
+                        <div class="app-logo">
+                            <img src="icons/icon128.png" alt="Twitter Stats Analyzer" width="64" height="64">
+                        </div>
+                        <div class="app-info">
+                            <p class="app-name">Twitter Stats Analyzer</p>
+                            <p class="app-version">Version 1.2.0</p>
+                            <p class="app-developer">Developed by: <a href="https://github.com/azorkai" target="_blank">azorkai</a></p>
+                        </div>
+                    </div>
+                    <div class="support-button-settings">
+                        <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
+                            <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=azorkai&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+    <script src="bulk_follow.js"></script>
+    <script src="auto_interact.js"></script>
+    <script src="prank_profile.js"></script>
+</body>
+</html>

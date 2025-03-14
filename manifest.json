@@ -1,0 +1,47 @@
+{
+    "manifest_version": 3,
+    "name": "Twitter Stats Analyzer",
+    "version": "1.0",
+    "description": "Analyze Twitter profiles, track verified followers, bulk follow users, and auto interact with tweets.",
+    "permissions": ["activeTab", "scripting", "storage", "tabs"],
+    "host_permissions": ["https://x.com/*", "https://twitter.com/*", "https://cdn.jsdelivr.net/*"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://x.com/*", "https://twitter.com/*"],
+        "js": ["ad_blocker.js"],
+        "run_at": "document_idle"
+      },
+      {
+        "matches": ["https://x.com/*", "https://twitter.com/*"],
+        "js": ["prank_profile_content.js"],
+        "run_at": "document_idle"
+      }
+    ],
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://cdn.jsdelivr.net;"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "settings.html",
+          "settings.js",
+          "style.css",
+          "icon.png",
+          "icons/*.png"
+        ],
+        "matches": ["<all_urls>"]
+      },
+      {
+        "resources": ["html2canvas.min.js"],
+        "matches": ["https://x.com/*", "https://twitter.com/*"]
+      }
+    ]
+  }
+  
