@@ -4,7 +4,7 @@
     "version": "1.0",
     "description": "Advanced Twitter analytics and interaction tool. Track verified followers, automate interactions, and gain valuable insights.",
     "permissions": ["activeTab", "scripting", "storage", "tabs"],
-    "host_permissions": ["https://x.com/*", "https://twitter.com/*", "https://cdn.jsdelivr.net/*"],
+    "host_permissions": ["https://x.com/*", "https://twitter.com/*"],
     "action": {
       "default_popup": "popup.html",
       "default_icon": "icon.png"
@@ -25,7 +25,7 @@
       }
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://cdn.jsdelivr.net;"
+      "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self';"
     },
     "web_accessible_resources": [
       {
@@ -37,10 +37,6 @@
           "icons/*.png"
         ],
         "matches": ["<all_urls>"]
-      },
-      {
-        "resources": ["html2canvas.min.js"],
-        "matches": ["https://x.com/*", "https://twitter.com/*"]
       }
     ]
   }
