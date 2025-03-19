@@ -232,9 +232,7 @@
                     
                     // List of CDN URLs to try
                     const cdnUrls = [
-                        'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
-                        'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
-                        'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+                        'removed'
                     ];
                     
                     // Try each CDN URL in sequence
