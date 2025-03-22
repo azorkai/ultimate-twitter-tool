@@ -13,7 +13,7 @@
   </p>
   <p>
     <a href="https://chromewebstore.google.com/detail/hilklkcllonlkiekncimoieanefmoglb?utm_source=item-share-cb" target="_blank">
-      <img src="https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png" alt="Available in the Chrome Web Store" width="200">
+      <img src="https://img.shields.io/badge/Available%20in%20the-Chrome%20Web%20Store-blue?logo=google-chrome&logoColor=white&style=for-the-badge" alt="Available in the Chrome Web Store" width="280">
     </a>
   </p>
   <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
