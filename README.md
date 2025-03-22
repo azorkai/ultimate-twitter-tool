@@ -121,7 +121,7 @@ This extension is not affiliated with, endorsed by, or connected to Twitter/X. U
 
 <h2 id="license">📄 License</h2>
 
-[MIT License](https://github.com/azorkai/ultimate-twitter-tool/blob/main/LICENSE)
+[Proprietary License](https://github.com/azorkai/ultimate-twitter-tool/blob/main/LICENSE) - Commercial use and redistribution prohibited without permission.
 
 <h2 id="contributing">🤝 Contributing</h2>
 
