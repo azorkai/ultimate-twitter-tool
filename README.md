@@ -1,7 +1,7 @@
 # Ultimate Twitter Tool 🔍
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/azorkai/ultimate-twitter-tool/assets/logo.png" alt="Ultimate Twitter Tool Logo" width="320">
+  <img src="https://raw.githubusercontent.com/azorkai/ultimate-twitter-tool/refs/heads/main/assets/logo.png" alt="Ultimate Twitter Tool Logo" width="320">
   <br>
   <p><strong>Advanced Twitter/X profile analytics and interaction management</strong></p>
   <p>
