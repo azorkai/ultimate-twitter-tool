@@ -21,11 +21,11 @@
   </a>
 </div>
 
-## 🌟 Overview
+<h2 id="overview">🌟 Overview</h2>
 
 **Ultimate Twitter Tool** is a powerful browser extension that enhances your Twitter/X experience by providing advanced profile analytics and interaction tools. Track verified followers, automate interactions, and gain valuable insights about your Twitter presence - all in a beautiful, intuitive interface.
 
-## ✨ Features
+<h2 id="features">✨ Features</h2>
 
 - **Profile Statistics**: View comprehensive statistics about any Twitter/X profile including tweet count, followers, following, and verified followers.
 - **Verified Followers Tracking**: Easily identify and track your verified followers with detailed information.
@@ -37,7 +37,7 @@
 - **Background Operation**: Continue browsing while the extension works in the background.
 - **Secure & Private**: Your data stays on your device with no external data sharing.
 
-## 🔧 Installation
+<h2 id="installation">🔧 Installation</h2>
 
 ### Chrome / Edge / Brave
 
@@ -54,7 +54,7 @@
 4. Select the downloaded .xpi file
 5. Follow the prompts to complete installation
 
-## 📖 Usage
+<h2 id="usage">📖 Usage</h2>
 
 1. **Profile Analysis**:
    - Click on the extension icon while on any Twitter/X profile page
@@ -79,7 +79,7 @@
    - Customize the extension behavior through the Settings panel
    - Adjust theme, text size, and other preferences
 
-## 📸 Screenshots
+<h2 id="screenshots">📸 Screenshots</h2>
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/azorkai/ultimate-twitter-tool/main/screenshots/profile-stats.png" alt="Profile Statistics" width="280">
@@ -87,7 +87,7 @@
   <img src="https://raw.githubusercontent.com/azorkai/ultimate-twitter-tool/main/screenshots/auto-interact.png" alt="Auto Interact" width="280">
 </div>
 
-## 🔄 Recent Updates
+<h2 id="recent-updates">🔄 Recent Updates</h2>
 
 ### v1.1.0 (2025-03-21)
 - Added enhanced profile analytics dashboard
