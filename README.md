@@ -5,11 +5,14 @@
   <br>
   <p><strong>Advanced Twitter/X profile analytics and interaction management</strong></p>
   <p>
+    <a href="#overview">Overview</a> •
     <a href="#features">Features</a> •
     <a href="#installation">Installation</a> •
     <a href="#usage">Usage</a> •
     <a href="#screenshots">Screenshots</a> •
-    <a href="#recent-updates">Updates</a>
+    <a href="#recent-updates">Updates</a> •
+    <a href="#privacy">Privacy</a> •
+    <a href="#disclaimer">Disclaimer</a>
   </p>
   <p>
     <a href="https://chromewebstore.google.com/detail/hilklkcllonlkiekncimoieanefmoglb?utm_source=item-share-cb" target="_blank">
@@ -108,19 +111,19 @@
 
 [View all updates](https://github.com/azorkai/ultimate-twitter-tool/blob/main/changelog.json)
 
-## 🔒 Privacy
+<h2 id="privacy">🔒 Privacy</h2>
 
 This extension processes all data locally on your device. No data is sent to external servers or third parties. Your Twitter credentials and activity remain private.
 
-## ⚠️ Disclaimer
+<h2 id="disclaimer">⚠️ Disclaimer</h2>
 
 This extension is not affiliated with, endorsed by, or connected to Twitter/X. Use responsibly and in accordance with Twitter's Terms of Service.
 
-## 📄 License
+<h2 id="license">📄 License</h2>
 
 [MIT License](https://github.com/azorkai/ultimate-twitter-tool/blob/main/LICENSE)
 
-## 🤝 Contributing
+<h2 id="contributing">🤝 Contributing</h2>
 
 Contributions are welcome! Feel free to submit pull requests or open issues for bugs and feature requests.
 
