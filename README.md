@@ -1,7 +1,7 @@
 # Ultimate Twitter Tool 🔍
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/azorkai/ultimate-twitter-tool/main/assets/icon128.png" alt="Ultimate Twitter Tool Logo" width="120">
+  <img src="https://raw.githubusercontent.com/azorkai/ultimate-twitter-tool/main/assets/logo.png" alt="Ultimate Twitter Tool Logo" width="320">
   <br>
   <p><strong>Advanced Twitter/X profile analytics and interaction management</strong></p>
   <p>
@@ -10,6 +10,11 @@
     <a href="#usage">Usage</a> •
     <a href="#screenshots">Screenshots</a> •
     <a href="#recent-updates">Updates</a>
+  </p>
+  <p>
+    <a href="https://chromewebstore.google.com/detail/hilklkcllonlkiekncimoieanefmoglb?utm_source=item-share-cb" target="_blank">
+      <img src="https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png" alt="Available in the Chrome Web Store" width="200">
+    </a>
   </p>
   <a href="https://www.buymeacoffee.com/azorkai" target="_blank">
     <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=azorkai&button_colour=FF5F5F&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" alt="Buy Me A Coffee" style="height: 45px !important;width: 180px !important;">
@@ -36,12 +41,10 @@
 
 ### Chrome / Edge / Brave
 
-1. Download the latest release from [GitHub](https://github.com/azorkai/ultimate-twitter-tool/releases)
-2. Unzip the file to a location on your computer
-3. Open Chrome and navigate to `chrome://extensions/`
-4. Enable "Developer mode" (toggle in the top right)
-5. Click "Load unpacked" and select the unzipped folder
-6. The extension is now installed and ready to use!
+1. Visit the [Chrome Web Store](https://chromewebstore.google.com/detail/hilklkcllonlkiekncimoieanefmoglb?utm_source=item-share-cb)
+2. Click "Add to Chrome" button
+3. Follow the installation prompts
+4. The extension is now installed and ready to use!
 
 ### Firefox
 
@@ -86,26 +89,22 @@
 
 ## 🔄 Recent Updates
 
-### v1.3.5 (2025-03-18)
-- Redesigned interaction controls to fix theme change issues
-- Replaced toggle buttons with custom checkbox design
-- Fixed event propagation issues in mobile interface
-- Enhanced interaction between controls and theme settings
-- Improved performance and reliability of Auto Interact feature
+### v1.1.0 (2025-03-21)
+- Added enhanced profile analytics dashboard
+- Improved verified follower detection algorithm
+- Updated UI with new theme options
+- Added bulk follow limit controls
+- Fixed issues with auto-interaction feature
+- Performance optimizations across all features
 
-### v1.3.4 (2025-03-17)
-- Fixed toggle buttons in Interact tab causing theme changes
-- Improved toggle button functionality in mobile view
-- Enhanced interaction between toggle controls and theme settings
-- Fixed UI inconsistencies in mobile interface
-- Optimized event handling for better user experience
-
-### v1.3.3 (2025-03-16)
-- Simplified Auto Interact interface for better mobile experience
-- Fixed visibility issues with interaction settings
-- Improved UI for small screens and mobile devices
-- Enhanced interaction controls for better usability
-- Streamlined settings for faster configuration
+### v1.0.0 (2025-03-15)
+- Initial public release
+- Core features implemented
+- Basic analytics dashboard
+- Verified followers tracking
+- Auto-interaction capabilities
+- Bulk follow functionality
+- Ad blocking feature
 
 [View all updates](https://github.com/azorkai/ultimate-twitter-tool/blob/main/changelog.json)
 
